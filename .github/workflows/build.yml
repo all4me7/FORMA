@@ -1,4 +1,4 @@
-name: Build FORMA APK v1.3.3
+name: Build FORMA APK v1.4.1
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
       - name: Verify workflow revision
-        run: echo "FORMA workflow v1.3.3 - SDK packages resolved by Gradle"
+        run: echo "FORMA workflow v1.4.1 - SDK packages resolved by Gradle"
       - run: gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
