@@ -1,13 +1,5 @@
-FORMA 1.3.4
+# FORMA 1.4.3 – Priority Dots Edition
+
+Tło zielone, żółte lub szare niezależnie od ważności. Kropka i dzień realizacji: czerwone dla ważnych, szare dla przedawnionych, ciemnozielone dla pozostałych. Tło gestów widoczne tylko podczas przesuwania.
 
 Build: GitHub Actions / gradle assembleDebug.
-
-Usunięto integrację z kalendarzem i jej uprawnienia. Istniejące wydarzenia pozostają w kalendarzu. Nowe zadania mają domyślnie włączone przypomnienie; bez terminu przypomnienie jest wyłączane przy zapisie. Mechanizm alarmów z 1.3.3 zachowany.
-
-1.3.5: Consistent task editor spacing and aligned reminder checkbox.
-
-1.4: Automatic task colors, important flag, independent due time. Existing tasks default to all-day.
-
-1.4.2: adaptive launcher icon, monochrome Android 13+ variant.
-
-1.4.2: automatic reminder/overdue colors; duplicate time hidden; refresh on focus.
