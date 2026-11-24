@@ -8,4 +8,6 @@ Usunięto integrację z kalendarzem i jej uprawnienia. Istniejące wydarzenia po
 
 1.4: Automatic task colors, important flag, independent due time. Existing tasks default to all-day.
 
-1.4.1: adaptive launcher icon, monochrome Android 13+ variant.
+1.4.2: adaptive launcher icon, monochrome Android 13+ variant.
+
+1.4.2: automatic reminder/overdue colors; duplicate time hidden; refresh on focus.
