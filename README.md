@@ -1,2 +1,2 @@
-FORMA 1.5.5
-Checkbox label alignment and detail title spacing.
+FORMA 1.5.6 – Motion Optimization
+FLIP transforms for visible task cards; removal animation unchanged.

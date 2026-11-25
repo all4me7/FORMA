@@ -87,7 +87,37 @@ function askDelete(id){const t=state.tasks.find(x=>x.id===id);if(!t)return;dlg.i
 let motionBusy=false;
 const reducedMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const waitMotion=ms=>new Promise(resolve=>setTimeout(resolve,reducedMotion()?0:ms));
-async function animateRemoval(card,kind,action){if(motionBusy)return;if(!card||!card.isConnected){action();return}motionBusy=true;const wrap=card.parentElement;try{const h=wrap.getBoundingClientRect().height;wrap.style.height=h+'px';card.style.transition=reducedMotion()?'none':'transform 280ms ease-out, opacity 280ms ease-out';card.style.transform=kind==='done'?'translateX(110%)':'scale(.96)';card.style.opacity='0';await waitMotion(280);wrap.classList.remove('swiping','delete');wrap.style.transition=reducedMotion()?'none':'height 220ms ease, margin 220ms ease';wrap.style.height='0px';wrap.style.marginTop='0';wrap.style.marginBottom='0';await waitMotion(220);}finally{motionBusy=false;action();}}
+async function animateRemoval(card,kind,action){
+ if(motionBusy)return;
+ if(!card||!card.isConnected||reducedMotion()){action();return}
+ motionBusy=true;
+ try{
+  card.style.transition='transform 280ms ease-out, opacity 280ms ease-out';
+  card.style.transform=kind==='done'?'translateX(110%)':'scale(.96)';
+  card.style.opacity='0';
+  await waitMotion(280);
+  const main=$('main'), viewport=main.getBoundingClientRect(), first=new Map();
+  for(const el of main.querySelectorAll('.task[data-task]')){
+   if(el===card)continue;
+   const r=el.parentElement.getBoundingClientRect();
+   if(r.height&&r.bottom>viewport.top&&r.top<viewport.bottom)first.set(el.dataset.task,r.top);
+  }
+  motionBusy=false;
+  action(); // render final layout once
+  motionBusy=true;
+  const animations=[];
+  for(const el of main.querySelectorAll('.task[data-task]')){
+   const wrap=el.parentElement,r=wrap.getBoundingClientRect();
+   if(!r.height||r.bottom<=viewport.top||r.top>=viewport.bottom)continue;
+   const old=first.get(el.dataset.task);
+   if(old===undefined)continue;
+   const dy=old-r.top;
+   if(Math.abs(dy)>0.5)animations.push([wrap,dy]);
+  }
+  const running=animations.map(([wrap,dy])=>wrap.animate([{transform:`translateY(${dy}px)`},{transform:'translateY(0)'}],{duration:180,easing:'cubic-bezier(.2,.7,.2,1)'}));
+  await Promise.all(running.map(a=>a.finished.catch(()=>{})));
+ }finally{motionBusy=false;}
+}
 function findCard(id){return [...agenda.querySelectorAll('.task[data-task]')].find(c=>c.dataset.task===id)}
 let gesture=null, suppressClickUntil=0;const agenda=$('main');
 agenda.addEventListener('pointerdown',e=>{const card=e.target.closest('.task[data-task]');if(motionBusy||!card||e.target.closest('button')||!e.isPrimary||e.button!==0)return;gesture={card,wrap:card.parentElement,x:e.clientX,y:e.clientY,id:e.pointerId,dx:0,axis:null};});
