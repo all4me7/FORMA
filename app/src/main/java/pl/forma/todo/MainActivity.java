@@ -2,6 +2,7 @@ package pl.forma.todo;
 import android.app.*;import android.os.*;import android.webkit.*;import android.content.*;import android.content.pm.PackageManager;import android.net.Uri;import org.json.*;
 public class MainActivity extends Activity {
  WebView w;
+ @Override public void onBackPressed(){if(w==null){super.onBackPressed();return;}w.evaluateJavascript("typeof requestBack === 'function' && requestBack()",result->{if(!"true".equals(result))MainActivity.super.onBackPressed();});}
  boolean fullscreen=true;
  private void applyFullscreen(){ if(w==null)return; if(Build.VERSION.SDK_INT>=30){android.view.WindowInsetsController c=getWindow().getInsetsController();if(c!=null){c.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);if(fullscreen)c.hide(android.view.WindowInsets.Type.systemBars());else c.show(android.view.WindowInsets.Type.systemBars());}}else{getWindow().getDecorView().setSystemUiVisibility(fullscreen?5894:0);}w.requestApplyInsets();}
  @Override public void onWindowFocusChanged(boolean focused){super.onWindowFocusChanged(focused);if(focused)applyFullscreen();}
