@@ -6,7 +6,28 @@ public class MainActivity extends Activity {
  @Override public void onBackPressed(){handleBack();}
  private void handleBack(){if(w==null){super.onBackPressed();return;}w.evaluateJavascript("typeof requestBack === 'function' && requestBack()",result->{if(!"true".equals(result))finish();});}
  boolean fullscreen=true;
- private void applyFullscreen(){ if(w==null)return; if(Build.VERSION.SDK_INT>=30){android.view.WindowInsetsController c=getWindow().getInsetsController();if(c!=null){c.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);if(fullscreen)c.hide(android.view.WindowInsets.Type.systemBars());else c.show(android.view.WindowInsets.Type.systemBars());}}else{getWindow().getDecorView().setSystemUiVisibility(fullscreen?5894:0);}w.requestApplyInsets();}
+ boolean detailScreen=false;
+ private void applyFullscreen(){
+  if(w==null)return;
+  android.view.Window window=getWindow();
+  window.setNavigationBarColor(0xfff3f1ec);
+  if(Build.VERSION.SDK_INT>=29)window.setNavigationBarContrastEnforced(false);
+  if(Build.VERSION.SDK_INT>=30){
+   android.view.WindowInsetsController c=window.getInsetsController();
+   if(c!=null){
+    c.setSystemBarsAppearance(android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+    c.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+    if(!fullscreen)c.show(android.view.WindowInsets.Type.systemBars());
+    else if(detailScreen){c.show(android.view.WindowInsets.Type.navigationBars());c.hide(android.view.WindowInsets.Type.statusBars());}
+    else c.hide(android.view.WindowInsets.Type.systemBars());
+   }
+  }else{
+   int flags=android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+   if(fullscreen){flags|=android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;if(!detailScreen)flags|=android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;}
+   window.getDecorView().setSystemUiVisibility(flags);
+  }
+  w.requestApplyInsets();
+ }
  @Override public void onWindowFocusChanged(boolean focused){super.onWindowFocusChanged(focused);if(focused)applyFullscreen();}
  @Override protected void onResume(){super.onResume();applyFullscreen();if(exactAllowed())Boot.restore(this);if(w!=null)w.evaluateJavascript("if(typeof updateAlarmStatus==='function')updateAlarmStatus()",null);}
  ValueCallback<Uri[]> chooser; String backup;
@@ -18,6 +39,7 @@ public class MainActivity extends Activity {
  private void requestReminderPermissions(){if(!notificationsAllowed()){requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"},1);return;}if(!exactAllowed())try{startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,Uri.parse("package:"+getPackageName())));}catch(Exception e){android.widget.Toast.makeText(this,"Włącz dokładne alarmy w ustawieniach Androida",1).show();}}
  @Override public void onRequestPermissionsResult(int request,String[] permissions,int[] results){super.onRequestPermissionsResult(request,permissions,results);if(request==1&&notificationsAllowed())requestReminderPermissions();}
  class Bridge {
+ @JavascriptInterface public void detailScreen(boolean enabled){runOnUiThread(()->{detailScreen=enabled;applyFullscreen();});}
  @JavascriptInterface public void fullscreen(boolean enabled){runOnUiThread(()->{fullscreen=enabled;getSharedPreferences("data",0).edit().putBoolean("fullscreen",enabled).apply();applyFullscreen();});}
  @JavascriptInterface public void keyboard(){runOnUiThread(()->{w.requestFocus();w.postDelayed(()->((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(w,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT),100);});}
  @JavascriptInterface public void exportBackup(String json){runOnUiThread(()->{backup=json;startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("application/json").putExtra(Intent.EXTRA_TITLE,"FORMA-backup.json"),11);});}
