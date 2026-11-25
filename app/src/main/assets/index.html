@@ -50,10 +50,12 @@ nav.fab-nav button:active{background:#293e2c}
 
 #page{position:fixed;inset:0;z-index:10;background:#f3f1ec;overflow:auto;overscroll-behavior:contain;padding:0 16px 28px;scroll-padding-top:85px}
 #page .page-inner{max-width:650px;margin:auto}
-#page .page-toolbar{position:sticky;top:0;z-index:2;background:#f3f1ec;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 8px;min-height:64px}
+/* Shared header geometry: agenda 12px + 16px top inset, 48px controls. */
+#page .page-toolbar{position:sticky;top:0;z-index:2;background:#f3f1ec;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:28px 0 0;height:76px}
+#page .page-toolbar button{display:grid;place-items:center;line-height:24px;height:48px}
 #page .page-toolbar button{min-height:48px;min-width:48px}
 #page .page-toolbar .save-page{background:transparent;color:#354D38;font-weight:700;padding:12px}
-#page h2{font-size:28px;line-height:1.15;margin:8px 0 4px;letter-spacing:-1px}
+#page h2{font-size:28px;line-height:1.15;margin:2px 0 10px;letter-spacing:-1px}
 #page .settings-page>button{display:block;margin-top:16px;min-height:44px}
 body.page-open{overflow:hidden}body.page-open .fab-nav{visibility:hidden}
 </style><main id="main"></main><nav class="fab-nav"><button type="button" aria-label="Dodaj zadanie" onclick="edit()"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></nav><section id="page" hidden aria-label="Szczegóły"><div class="page-inner" id="pageInner"></div></section><dialog id="dlg"></dialog><script>
