@@ -39,6 +39,7 @@ public class MainActivity extends Activity {
  private void requestReminderPermissions(){if(!notificationsAllowed()){requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"},1);return;}if(!exactAllowed())try{startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,Uri.parse("package:"+getPackageName())));}catch(Exception e){android.widget.Toast.makeText(this,"Włącz dokładne alarmy w ustawieniach Androida",1).show();}}
  @Override public void onRequestPermissionsResult(int request,String[] permissions,int[] results){super.onRequestPermissionsResult(request,permissions,results);if(request==1&&notificationsAllowed())requestReminderPermissions();}
  class Bridge {
+ @JavascriptInterface public void haptic(){runOnUiThread(()->w.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK));}
  @JavascriptInterface public void detailScreen(boolean enabled){runOnUiThread(()->{detailScreen=enabled;applyFullscreen();});}
  @JavascriptInterface public void fullscreen(boolean enabled){runOnUiThread(()->{fullscreen=enabled;getSharedPreferences("data",0).edit().putBoolean("fullscreen",enabled).apply();applyFullscreen();});}
  @JavascriptInterface public void keyboard(){runOnUiThread(()->{w.requestFocus();w.postDelayed(()->((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(w,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT),100);});}
