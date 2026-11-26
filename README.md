@@ -1,2 +1,2 @@
-FORMA 1.5.8 - Weekend Alignment Fix
-Weekend markers no longer affect vertical alignment of day numbers.
+FORMA 1.6.4 - Search Corner Style
+Search field follows tile radius setting (0, 4, 18 px).
