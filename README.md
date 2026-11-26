@@ -1,2 +1,2 @@
-FORMA 1.5.7 – Weekend Indicators
-Weekend markers in calendar cells; preserves 1.5.6 FLIP animations.
+FORMA 1.5.8 - Weekend Alignment Fix
+Weekend markers no longer affect vertical alignment of day numbers.
