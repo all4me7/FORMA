@@ -1,4 +1,4 @@
-# FORMA 2.1.2
+# FORMA 1.9.0
 
 Android WebView app. Build APK using GitHub Actions workflow.
 
